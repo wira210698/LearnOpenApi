@@ -1,0 +1,497 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Todolist RestFul API",
+        "version": "1",
+        "description": "Open Api for Todo list",
+        "termsOfService": "https://programmerzamannow.com",
+        "contact": {
+            "name": "I Putu Putra Wiranata",
+            "email": "wiranataputra21@gmail.com",
+            "url": "https://programmerzamannow.com"
+        },
+        "license": {
+            "name": "APACHE 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+        }
+    },
+    "servers": [
+        {
+            "description": "Todolist Restful Api Server",
+            "url": "https://{environment}.programmerzamannow.com/v1",
+            "variables": {
+                "environment":{
+                    "default": "dev",
+                    "enum": [
+                        "dev",
+                        "prod",
+                        "qa"
+                    ]
+                }
+            }
+        }
+    ],
+    "externalDocs": {
+        "description": "Wesbite Json Scema",
+        "url": "https://json-schema.org/draft/2020-12/json-schema-validation.html"
+    },
+    "paths": {
+        "/todolist":{
+            "get":{
+                "tags": ["Todolist"],
+                "summary": "Get All Todo list",
+                "description": "Only will return active todolist complate todolist or deleted todolist will be removed",
+                "parameters": [
+                    {
+                        "name": "includeDone",
+                        "description": "Include done todolist in the result",
+                        "required": false,
+                        "in": "query",
+                        "schema":{
+                            "type": "boolean",
+                            "nullable": true
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "description": "search todolist by name",
+                        "required": false,
+                        "in": "query",
+                        "schema":{
+                            "type": "string",
+                            "nullable": true
+                        },
+                        "examples":{
+                            "java":{
+                                "description":"Example name by java",
+                                "value":"java"
+                            },
+                            "PHP":{
+                                "description":"Example name by PHP",
+                                "value":"PHP"
+                            }
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "description": "page todolist by name",
+                        "required": false,
+                        "in": "query",
+                        "schema":{
+                            "type": "string",
+                            "nullable": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": " Get Todolist Success",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type":"array",
+                                    "items":{
+                                        "type": "object",
+                                        "properties": {
+                                            "id":{
+                                                "type": "integer",
+                                                "description": "Todolist Id",
+                                                "nullable": false
+                                            },
+                                            "name":{
+                                                "type": "string",
+                                                "required": true,
+                                                "minLength": 1
+                                            },
+                                            "tags":{
+                                                "type": "array",
+                                                "required": false,
+                                                "minItems": 1,
+                                                "items":{
+                                                    "type": "string",
+                                                    "minItems": 1
+                                                }
+                                            },
+                                            "prority":{
+                                                "type": "boolean",
+                                                "required": true,
+                                                "minLength": 1
+                                            },
+                                            "user_id":{
+                                                "type": "integer",
+                                                "required": true
+                                            },
+                                            "dateExpired":{
+                                                "type": "string",
+                                                "default":"01/01/2022",
+                                                "required": true,
+                                                "minLength": 1
+                                            }
+                                            
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Success":{
+                                        "description": "Example success get all todolist",
+                                        "value":[
+                                            {
+                                                "name":"Java",
+                                                "tags":["make apps","testing","programming"],
+                                                "prority":1,
+                                                "user_id":1,
+                                                "dateExpired":"2022/11/01"
+                                            },
+                                            {
+                                                "name":"PHP",
+                                                "tags":["make apps"],
+                                                "prority":1,
+                                                "user_id":1,
+                                                "dateExpired":"2022/11/01"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post":{
+                "tags": ["Todolist"],
+                "summary": "Create new todolist",
+                "description": "Create new todolist and save in database",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/CreateOrUpdateSchemas"
+                            },
+                            "examples": {
+                                "java":{
+                                    "description": "Example body request by java",
+                                    "value":{
+                                        "name":"Java",
+                                        "tags":["make apps"],
+                                        "prority":1,
+                                        "user_id":1,
+                                        "dateExpired":"2022/11/01"
+
+
+                                    }
+                                },
+                                "PHP":{
+                                    "description": "Example body request by PHP",
+                                    "value":{
+                                        "name":"PHP",
+                                        "tags":["make apps"],
+                                        "prority":1,
+                                        "user_id":1,
+                                        "dateExpired":"2022/11/01"
+
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Success Create Todolist",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "errors":{
+                                            "type": "boolean",
+                                            "description": "error condition ",
+                                            "default":true
+                                        },
+                                        "message":{
+                                            "type": "string",
+                                            "description": "message create data is success"
+                                        }
+                                    }
+                                },
+                                "examples":{
+                                    "success":{
+                                        "description": "example responses success",
+                                        "value":{
+                                            "errors":false,
+                                            "message":" Data Todolist is success created"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500":{
+                        "description": "fail Create Todolist",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "errors":{
+                                            "type": "boolean",
+                                            "description": "error condition ",
+                                            "default":true
+                                        },
+                                        "message":{
+                                            "type": "string",
+                                            "description": "message create data is fail"
+                                        }
+                                    }
+                                },
+                                "examples":{
+                                    "fail":{
+                                        "description": "example responses fail",
+                                        "value":{
+                                            "errors":true,
+                                            "message":" Data Todolist is fail created"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/todolist/{todolistId}":{
+            "delete":{
+                "tags": ["Todolist"],
+                "summary": "delete data todolist",
+                "description": "delete data todolist and save in database",
+                "parameters":[
+                    {"$ref":"#/components/parameters/parmsTodoListId"}
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Success delete Todolist",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "errors":{
+                                            "type": "boolean",
+                                            "description": "error condition ",
+                                            "default":true
+                                        },
+                                        "message":{
+                                            "type": "string",
+                                            "description": "message delete data is success"
+                                        }
+                                    }
+                                },
+                                "examples":{
+                                    "success":{
+                                        "description": "example responses success",
+                                        "value":{
+                                            "errors":false,
+                                            "message":" Data Todolist is success deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500":{
+                        "description": "fail delete Todolist",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "errors":{
+                                            "type": "boolean",
+                                            "description": "error condition ",
+                                            "default":true
+                                        },
+                                        "message":{
+                                            "type": "string",
+                                            "description": "message delete data is fail"
+                                        }
+                                    }
+                                },
+                                "examples":{
+                                    "fail":{
+                                        "description": "example responses fail",
+                                        "value":{
+                                            "errors":true,
+                                            "message":" Data Todolist is fail deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "tags": ["Todolist"],
+                "summary": "Update new todolist",
+                "description": "Update new todolist and save in database",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/CreateOrUpdateSchemas"
+                            },
+                            "examples": {
+                                "java":{
+                                    "description": "Example body request by java",
+                                    "value":{
+                                        "name":"Java",
+                                        "tags":["make apps"],
+                                        "prority":1,
+                                        "user_id":1,
+                                        "dateExpired":"2022/11/01"
+                                    }
+                                },
+                                "PHP":{
+                                    "description": "Example body request by PHP",
+                                    "value":{
+                                        "name":"PHP",
+                                        "tags":["make apps"],
+                                        "prority":1,
+                                        "user_id":1,
+                                        "dateExpired":"2022/11/01"
+
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters":[
+                    {"$ref":"#/components/parameters/parmsTodoListId"}
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Success update Todolist",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "errors":{
+                                            "type": "boolean",
+                                            "description": "error condition ",
+                                            "default":true
+                                        },
+                                        "message":{
+                                            "type": "string",
+                                            "description": "message update data is success"
+                                        }
+                                    }
+                                },
+                                "examples":{
+                                    "success":{
+                                        "description": "example responses success",
+                                        "value":{
+                                            "errors":false,
+                                            "message":" Data Todolist is success update"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500":{
+                        "description": "fail update Todolist",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "errors":{
+                                            "type": "boolean",
+                                            "description": "error condition ",
+                                            "default":true
+                                        },
+                                        "message":{
+                                            "type": "string",
+                                            "description": "message update data is fail"
+                                        }
+                                    }
+                                },
+                                "examples":{
+                                    "fail":{
+                                        "description": "example responses fail",
+                                        "value":{
+                                            "errors":true,
+                                            "message":" Data Todolist is fail update"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    },
+    "components": {
+        "parameters": {
+            "parmsTodoListId":{
+                "name": "todolistId",
+                "description": "id from todolist",
+                "required": true,
+                "in": "path",
+                "schema":{
+                    "type": "integer",
+                    "nullable": false
+                }
+            }
+        },
+        "schemas": {
+            "CreateOrUpdateSchemas":{
+                "type": "object",
+                "properties": {
+                    "name":{
+                        "type": "string",
+                        "required": true,
+                        "minLength": 1
+                    },
+                    "tags":{
+                        "type": "array",
+                        "required": false,
+                        "minItems": 1,
+                        "items":{
+                            "type": "string",
+                            "minItems": 1
+                        }
+                    },
+                    "prority":{
+                        "type": "boolean",
+                        "required": true,
+                        "minLength": 1
+                    },
+                    "user_id":{
+                        "type": "integer",
+                        "required": true
+                    },
+                    "dateExpired":{
+                        "type": "string",
+                        "default":"01/01/2022",
+                        "required": true,
+                        "minLength": 1
+                    }
+                    
+                }
+            }
+        },
+        "examples": {
+            
+        }
+
+    }
+}
